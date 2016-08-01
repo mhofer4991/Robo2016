@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TravelPoint.cs" />
     <Compile Include="Views\RoboMap.xaml.cs">
       <DependentUpon>RoboMap.xaml</DependentUpon>
     </Compile>
@@ -101,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GeneralLibrary\GeneralLibrary.csproj">
+      <Project>{9ce4724f-f642-4d44-ac11-4342c88969f4}</Project>
+      <Name>GeneralLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
