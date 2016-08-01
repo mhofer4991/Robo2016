@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboGUI", "RoboGUI\RoboGUI.csproj", "{2C23FDFA-174B-47BA-9DE9-9D896924E85D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XBox360ControlLib", "XBox360ControlLib\XBox360ControlLib.csproj", "{1CC16259-02A3-4785-8F68-81E331D8C872}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralLibrary", "GeneralLibrary\GeneralLibrary.csproj", "{9CE4724F-F642-4D44-AC11-4342C88969F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XBox360ControlLib", "XBox360ControlLib\XBox360ControlLib.csproj", "{1CC16259-02A3-4785-8F68-81E331D8C872}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,12 +25,6 @@ Global
 		{2C23FDFA-174B-47BA-9DE9-9D896924E85D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C23FDFA-174B-47BA-9DE9-9D896924E85D}.Release|x86.ActiveCfg = Release|Any CPU
 		{2C23FDFA-174B-47BA-9DE9-9D896924E85D}.Release|x86.Build.0 = Release|Any CPU
-		{1CC16259-02A3-4785-8F68-81E331D8C872}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{1CC16259-02A3-4785-8F68-81E331D8C872}.Debug|x86.ActiveCfg = Debug|x86
-		{1CC16259-02A3-4785-8F68-81E331D8C872}.Debug|x86.Build.0 = Debug|x86
-		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|Any CPU.ActiveCfg = Release|x86
-		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|x86.ActiveCfg = Release|x86
-		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|x86.Build.0 = Release|x86
 		{9CE4724F-F642-4D44-AC11-4342C88969F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9CE4724F-F642-4D44-AC11-4342C88969F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CE4724F-F642-4D44-AC11-4342C88969F4}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -39,6 +33,12 @@ Global
 		{9CE4724F-F642-4D44-AC11-4342C88969F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9CE4724F-F642-4D44-AC11-4342C88969F4}.Release|x86.ActiveCfg = Release|Any CPU
 		{9CE4724F-F642-4D44-AC11-4342C88969F4}.Release|x86.Build.0 = Release|Any CPU
+		{1CC16259-02A3-4785-8F68-81E331D8C872}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1CC16259-02A3-4785-8F68-81E331D8C872}.Debug|x86.ActiveCfg = Debug|x86
+		{1CC16259-02A3-4785-8F68-81E331D8C872}.Debug|x86.Build.0 = Debug|x86
+		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|Any CPU.ActiveCfg = Release|x86
+		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|x86.ActiveCfg = Release|x86
+		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
