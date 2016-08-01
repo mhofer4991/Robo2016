@@ -13,7 +13,7 @@ namespace GeneralLibrary
             this.Position = new Position(x,y);
         }
 
-        public Fieldstate State { get; private set; }
+        public Fieldstate State { get; set; }
 
         public Position Position { get; set; }
     }
