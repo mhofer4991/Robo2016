@@ -236,9 +236,9 @@ namespace RoboGUI.Views
 
             this.UpdateRobotRotation(45);
 
-            this.AddField(new Field(0, 0) { State = Fieldstate.freeScanned });
+            this.AddField(new Field(0, 0) { State = Fieldstate.free });
             this.AddField(new Field(120, 120) { State = Fieldstate.freeScanned });
-            this.AddField(new Field(-120, -120));
+            this.AddField(new Field(-120, -120) { State = Fieldstate.occupied });
         }
 
         private void Reset()
