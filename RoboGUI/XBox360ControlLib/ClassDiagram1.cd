@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="XBox360ControlLib.Controls">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIQAAEAAAGACAAEAAAhQAAAAQAAAAABAMAgAAAAAABE=</HashCode>
+      <FileName>Controls.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XBox360ControlLib.ButtonPressedEventArgs">
+    <Position X="6.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAA=</HashCode>
+      <FileName>ButtonPressedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XBox360ControlLib.ThumbStickValueChangedEventArgs">
+    <Position X="9.5" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAEAAAAAAAAAAAAEAAAAAAAAABAAAAAQAAAAAA=</HashCode>
+      <FileName>ThumbStickValueChangedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XBox360ControlLib.TriggerValueChangedEventArgs">
+    <Position X="12.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAEAAAAAAAAAAAAEAAAAAAAAABAAAAAQAAAAAA=</HashCode>
+      <FileName>TriggerValueChangedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XBox360ControlLib.ButtonReleasedEventArgs">
+    <Position X="6.25" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAA=</HashCode>
+      <FileName>ButtonReleasedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XBox360ControlLib.Vector">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Vector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="XBox360ControlLib.Buttons">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>cSAAMAAgADAQAAAAAEAAAAAAAIAAAAAAAAAACAAIAAA=</HashCode>
+      <FileName>Buttons.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="XBox360ControlLib.ThumbSticks">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>ThumbSticks.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="XBox360ControlLib.Triggers">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Triggers.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
