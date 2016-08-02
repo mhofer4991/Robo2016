@@ -248,21 +248,21 @@ namespace RoboGUI.Views
 
             this.dragAction = false;
 
-            this.GenerateGridMap(this.ActualWidth, this.ActualHeight, this.zoom);
+            this.GenerateGridMap(10000, 10000, this.zoom);
         }
 
         private void GenerateGridMap(double width, double height, double zoom)
         {
             this.gridMap.Children.Clear();
 
-            for (double i = 0; i <= 10000; i += (zoom * CellSize))
+            for (double i = 0; i <= width; i += (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.X1 = i;
                 l1.X2 = i;
 
-                l1.Y1 = -10000;
-                l1.Y2 = 10000;
+                l1.Y1 = height * -1;
+                l1.Y2 = height;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;
@@ -270,14 +270,14 @@ namespace RoboGUI.Views
                 gridMap.Children.Add(l1);
             }
 
-            for (double i = 0; i > -10000; i -= (zoom * CellSize))
+            for (double i = 0; i > width * -1; i -= (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.X1 = i;
                 l1.X2 = i;
 
-                l1.Y1 = -10000;
-                l1.Y2 = 10000;
+                l1.Y1 = height * -1;
+                l1.Y2 = height;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;
@@ -285,14 +285,14 @@ namespace RoboGUI.Views
                 gridMap.Children.Add(l1);
             }
 
-            for (double i = 0; i <= 10000; i += (zoom * CellSize))
+            for (double i = 0; i <= height; i += (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.Y1 = i;
                 l1.Y2 = i;
 
-                l1.X1 = -10000;
-                l1.X2 = 10000;
+                l1.X1 = width * -1;
+                l1.X2 = width;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;
@@ -300,14 +300,14 @@ namespace RoboGUI.Views
                 gridMap.Children.Add(l1);
             }
 
-            for (double i = 0; i > -10000; i -= (zoom * CellSize))
+            for (double i = 0; i > height * -1; i -= (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.Y1 = i;
                 l1.Y2 = i;
 
-                l1.X1 = -10000;
-                l1.X2 = 10000;
+                l1.X1 = width * -1;
+                l1.X2 = width;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;

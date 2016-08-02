@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralLibrary", "GeneralLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XBox360ControlLib", "XBox360ControlLib\XBox360ControlLib.csproj", "{1CC16259-02A3-4785-8F68-81E331D8C872}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,14 @@ Global
 		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|Any CPU.ActiveCfg = Release|x86
 		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|x86.ActiveCfg = Release|x86
 		{1CC16259-02A3-4785-8F68-81E331D8C872}.Release|x86.Build.0 = Release|x86
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Debug|x86.Build.0 = Debug|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Release|x86.ActiveCfg = Release|Any CPU
+		{0368AFBF-9E65-4390-9766-0F8FE1C09BEB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
