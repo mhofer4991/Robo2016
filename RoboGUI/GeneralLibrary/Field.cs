@@ -11,6 +11,7 @@ namespace GeneralLibrary
         public Field(int x, int y)
         {
             this.Position = new Position(x,y);
+            this.State = Fieldstate.free;
         }
 
         public Fieldstate State { get; set; }

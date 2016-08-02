@@ -8,9 +8,9 @@ namespace GeneralLibrary
     [Serializable()]
     public enum Fieldstate
     {
-        free,
-        occupied,
-        freeScanned, 
-        unscanned
+        free = 0,
+        occupied = 1,
+        freeScanned = 2,
+        unscanned = 3
     }
 }

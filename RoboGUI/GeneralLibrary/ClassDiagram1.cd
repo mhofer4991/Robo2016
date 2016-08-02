@@ -1,75 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
-  <Class Name="GeneralLibrary.CircularSector">
-    <Position X="0.5" Y="0.5" Width="4.25" />
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GeneralLibrary.Field" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>MAAIAAAwAABAABAAAABAAAAAIAAAAAABAEAQAAAIAAA=</HashCode>
-      <FileName>CircularSector.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Field.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeneralLibrary.Vector">
-    <Position X="5" Y="0.5" Width="2.5" />
+  <Class Name="GeneralLibrary.Map" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
-      <FileName>Vector.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Map.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="GeneralLibrary.Route">
-    <Position X="8" Y="0.5" Width="2.5" />
+  <Class Name="GeneralLibrary.Position" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAYAA=</HashCode>
+      <FileName>Position.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GeneralLibrary.RoboStatus">
+    <Position X="8" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RoboStatus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GeneralLibrary.Route" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Route.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeneralLibrary.PlannedMovementEventArgs">
-    <Position X="0.5" Y="4.75" Width="3.25" />
+  <Enum Name="GeneralLibrary.Fieldstate" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>PlannedMovementEventArgs.cs</FileName>
+      <HashCode>AAAQAgAAAAAAAAAAAAAAAAAAAAAAAAABAAEAAAAAAAA=</HashCode>
+      <FileName>Fieldstate.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="GeneralLibrary.RealMovementEventArgs">
-    <Position X="4" Y="4.75" Width="3.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>RealMovementEventArgs.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GeneralLibrary.ScanRequestEventArgs">
-    <Position X="7.5" Y="4.75" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
-      <FileName>ScanRequestEventArgs.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GeneralLibrary.ScanResultEventArgs">
-    <Position X="10.5" Y="4.75" Width="3.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ScanResultEventArgs.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GeneralLibrary.RouteEventArgs">
-    <Position X="10.75" Y="0.5" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>RouteEventArgs.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GeneralLibrary.Area">
-    <Position X="13.25" Y="0.5" Width="3" />
-    <TypeIdentifier>
-      <HashCode>MAAIAAAwAAAAAAAAAAAAAAAAICAAAAAAAAAQAABAAAA=</HashCode>
-      <FileName>Area.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GeneralLibrary.Angle">
-    <Position X="14" Y="3.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAACAAAAAAgAAAAAAEAIAAACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Angle.cs</FileName>
-    </TypeIdentifier>
-  </Class>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
