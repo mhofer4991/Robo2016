@@ -35,6 +35,7 @@ namespace RoboGUI.Views
 
         private double currentRobotRotation;
 
+        // drag action
         private bool dragAction;
 
         private Point oldMouse;
@@ -157,6 +158,11 @@ namespace RoboGUI.Views
 
         private void Rect_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (dragAction)
+            {
+                return;
+            }
+
             Field field = (Field)((Rectangle)sender).DataContext;
             Point p = e.GetPosition(scanMap);
 
@@ -338,12 +344,15 @@ namespace RoboGUI.Views
 
         private void robotPositionPolygon_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            dragAction = false;
         }
 
         private void robotPositionPolygon_MouseMove(object sender, MouseEventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
+                dragAction = true;
+
                 scanmapTranslateTransform.X = tx + e.GetPosition(this).X - oldMouse.X;
                 scanmapTranslateTransform.Y = ty + e.GetPosition(this).Y - oldMouse.Y;
             }

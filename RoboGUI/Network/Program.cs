@@ -10,6 +10,13 @@ namespace Network
     {
         static void Main(string[] args)
         {
+            RemoteClient cl = new RemoteClient();
+            if (cl.Connect("192.168.0.189"))
+            {
+                Console.WriteLine("connected!");
+            }
+
+            Console.ReadLine();            
         }
     }
 }
