@@ -23,7 +23,7 @@ namespace RoboGUI.Views
     /// </summary>
     public partial class RoboMap : UserControl, INotifyPropertyChanged
     {
-        private static double CellSize = 30;
+        private static double CellSize = 50;
 
         private double zoom;
 
@@ -129,10 +129,13 @@ namespace RoboGUI.Views
             this.fields.Add(field);
 
             Rectangle rect = new Rectangle();
+
             rect.Width = CellSize;
             rect.Height = CellSize;
-            Canvas.SetLeft(rect, field.Position.X - CellSize / 2);
-            Canvas.SetTop(rect, field.Position.Y - CellSize / 2);
+
+            Canvas.SetLeft(rect, field.Position.X * CellSize - CellSize / 2);
+            Canvas.SetTop(rect, field.Position.Y * CellSize - CellSize / 2);
+
             rect.MouseLeftButtonUp += Rect_MouseLeftButtonUp;
             rect.DataContext = field;
 
@@ -242,9 +245,9 @@ namespace RoboGUI.Views
 
             this.UpdateRobotRotation(45);
 
-            this.AddField(new Field(0, 0) { State = Fieldstate.free });
-            this.AddField(new Field(120, 120) { State = Fieldstate.freeScanned });
-            this.AddField(new Field(-120, -120) { State = Fieldstate.occupied });
+            //this.AddField(new Field(0, 0) { State = Fieldstate.free });
+            this.AddField(new Field(5, 5) { State = Fieldstate.freeScanned });
+            this.AddField(new Field(-5, -5) { State = Fieldstate.occupied });
         }
 
         private void Reset()
@@ -261,14 +264,26 @@ namespace RoboGUI.Views
         {
             this.gridMap.Children.Clear();
 
-            for (double i = 0; i <= width; i += (zoom * CellSize))
+            Rectangle start = new Rectangle();
+
+            start.Width = CellSize;
+            start.Height = CellSize;
+
+            Canvas.SetLeft(start, CellSize / -2);
+            Canvas.SetTop(start, CellSize / -2);
+
+            start.Fill = Brushes.White;
+
+            this.gridMap.Children.Add(start);
+
+            for (double i = CellSize / -2; i <= width; i += (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.X1 = i;
                 l1.X2 = i;
 
-                l1.Y1 = height * -1;
-                l1.Y2 = height;
+                l1.Y1 = CellSize / -2 + height * -1;
+                l1.Y2 = CellSize / 2 + height;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;
@@ -276,14 +291,14 @@ namespace RoboGUI.Views
                 gridMap.Children.Add(l1);
             }
 
-            for (double i = 0; i > width * -1; i -= (zoom * CellSize))
+            for (double i = CellSize / -2; i > width * -1; i -= (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.X1 = i;
                 l1.X2 = i;
 
-                l1.Y1 = height * -1;
-                l1.Y2 = height;
+                l1.Y1 = CellSize / -2 + height * -1;
+                l1.Y2 = CellSize / 2 + height;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;
@@ -291,14 +306,14 @@ namespace RoboGUI.Views
                 gridMap.Children.Add(l1);
             }
 
-            for (double i = 0; i <= height; i += (zoom * CellSize))
+            for (double i = CellSize / 2; i <= height; i += (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.Y1 = i;
                 l1.Y2 = i;
 
-                l1.X1 = width * -1;
-                l1.X2 = width;
+                l1.X1 = CellSize / -2 + width * -1;
+                l1.X2 = CellSize / 2 + width;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;
@@ -306,14 +321,14 @@ namespace RoboGUI.Views
                 gridMap.Children.Add(l1);
             }
 
-            for (double i = 0; i > height * -1; i -= (zoom * CellSize))
+            for (double i = CellSize / -2; i > height * -1; i -= (zoom * CellSize))
             {
                 Line l1 = new Line();
                 l1.Y1 = i;
                 l1.Y2 = i;
 
-                l1.X1 = width * -1;
-                l1.X2 = width;
+                l1.X1 = CellSize / -2 + width * -1;
+                l1.X2 = CellSize / 2 + width;
 
                 l1.Stroke = Brushes.DarkGray;
                 l1.StrokeThickness = 0.5;

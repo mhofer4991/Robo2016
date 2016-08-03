@@ -61,6 +61,7 @@ namespace XBox360ControlLib
         /// </summary>
         public void Start()
         {
+            this.updateThread.IsBackground = true;
             this.updateThread.Start();
         }
 

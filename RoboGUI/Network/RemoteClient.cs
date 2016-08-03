@@ -41,6 +41,7 @@ namespace Network
 
                 IsRunning = true;
                 Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
+                t.IsBackground = true;
                 t.Start(client);
 
                 return true;
@@ -56,10 +57,15 @@ namespace Network
             IsRunning = false;
         }
 
+        public void SendMessage(byte code, object msg)
+        {
+            this.SendData(code, Helper.GetBytesFromMessage(msg));
+        }
+
         private void SendData(byte code, byte[] data)
         {
             NetworkStream stream = client.GetStream();
-            byte[] newMsg = Helper.BuildMessage(4, data);
+            byte[] newMsg = Helper.BuildMessage(code, data);
 
             stream.Write(newMsg, 0, newMsg.Length);
             stream.Flush();
@@ -125,7 +131,7 @@ namespace Network
                     this.OnRoboStatusUpdated(rs);
                 }
 
-                this.SendData(4, Helper.GetBytesFromMessage(rs));
+                //this.SendData(4, Helper.GetBytesFromMessage(rs));
             }
         }
     }
