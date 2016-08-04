@@ -1,4 +1,5 @@
 ﻿using GeneralLibrary;
+using RoboInput;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,9 +12,13 @@ using System.Threading.Tasks;
 
 namespace Network
 {
-    public class RemoteClient
+    public class RemoteClient : IRemoteInputSender
     {
         public const int PORT = 4001;
+
+        public const byte MSGCODE_REMOTE_CONTROL_INPUT = 1;
+
+        public const byte MSGCODE_ROBOT_STATUS_UPDATE = 5;
 
         private TcpClient client;
 
@@ -31,16 +36,25 @@ namespace Network
             private set;
         }
 
+        public bool IsConnected
+        {
+            get;
+            private set;
+        }
+
         public bool Connect(string address)
         {
             this.client = new TcpClient();
             IPEndPoint ip = new IPEndPoint(IPAddress.Parse(address), PORT);
+            IsConnected = false;
 
             try
             {
                 client.Connect(ip);
 
                 IsRunning = true;
+                IsConnected = true;
+
                 Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
                 t.IsBackground = true;
                 t.Start(client);
@@ -58,6 +72,11 @@ namespace Network
             IsRunning = false;
         }
 
+        public void SendInput(ControlInput controlInput)
+        {
+            this.SendMessage(MSGCODE_REMOTE_CONTROL_INPUT, controlInput);
+        }
+
         public void SendMessage(byte code, object msg)
         {
             this.SendData(code, Helper.GetBytesFromMessage(msg));
@@ -67,17 +86,24 @@ namespace Network
         {
             try
             {
-                NetworkStream stream = client.GetStream();
-                byte[] newMsg = Helper.BuildMessage(code, data);
+                if (this.IsConnected)
+                {
+                    NetworkStream stream = client.GetStream();
+                    byte[] newMsg = Helper.BuildMessage(code, data);
 
-                stream.Write(newMsg, 0, newMsg.Length);
-                stream.Flush();
+                    stream.Write(newMsg, 0, newMsg.Length);
+                    stream.Flush();
+                }
             }
             catch (IOException e)
             {
+                IsConnected = false;
+                this.Stop();
             }
             catch (SocketException e)
             {
+                IsConnected = false;
+                this.Stop();
             }
         }
 
@@ -86,45 +112,58 @@ namespace Network
             TcpClient tcp = (TcpClient)client;
             NetworkStream stream = tcp.GetStream();
             
-            while (IsRunning)
+            try
             {
-                if (stream.DataAvailable)
+                while (IsRunning)
                 {
-                    byte[] code = new byte[1];
-
-                    // Get code
-                    if (stream.Read(code, 0, code.Length) == code.Length)
+                    if (stream.DataAvailable)
                     {
-                        byte[] length = new byte[4];
+                        byte[] code = new byte[1];
 
-                        // Get size of data
-                        if (stream.Read(length, 0, length.Length) == length.Length)
+                        // Get code
+                        if (stream.Read(code, 0, code.Length) == code.Length)
                         {
-                            int size = BitConverter.ToInt32(length, 0);
+                            byte[] length = new byte[4];
 
-                            // Get data
-                            byte[] data = new byte[size];
-                            int bytesRead = 0;
-
-                            while (bytesRead < data.Length)
+                            // Get size of data
+                            if (stream.Read(length, 0, length.Length) == length.Length)
                             {
-                                int read = stream.Read(data, bytesRead, data.Length - bytesRead);
-                                bytesRead += read;
+                                int size = BitConverter.ToInt32(length, 0);
 
-                                if (read == 0)
+                                // Get data
+                                byte[] data = new byte[size];
+                                int bytesRead = 0;
+
+                                while (bytesRead < data.Length)
                                 {
-                                    break;
-                                }
-                            }
+                                    int read = stream.Read(data, bytesRead, data.Length - bytesRead);
+                                    bytesRead += read;
 
-                            HandleData(code[0], data);
+                                    if (read == 0)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                HandleData(code[0], data);
+                            }
                         }
                     }
+                    else
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
-                else
-                {
-                    Thread.Sleep(1000);
-                }
+            }
+            catch (IOException e)
+            {
+                IsConnected = false;
+                this.Stop();
+            }
+            catch (SocketException e)
+            {
+                IsConnected = false;
+                this.Stop();
             }
         }
 
@@ -132,7 +171,7 @@ namespace Network
         {
             // Handle data
 
-            if (code == 5)
+            if (code == MSGCODE_ROBOT_STATUS_UPDATE)
             {
                 RoboStatus rs = Helper.GetMessageFromBytes<RoboStatus>(data);
 

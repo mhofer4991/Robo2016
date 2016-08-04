@@ -59,6 +59,10 @@
       <Project>{9ce4724f-f642-4d44-ac11-4342c88969f4}</Project>
       <Name>GeneralLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RoboInput\RoboInput.csproj">
+      <Project>{a90053f9-4973-4fee-a54e-5f667ff0b100}</Project>
+      <Name>RoboInput</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
