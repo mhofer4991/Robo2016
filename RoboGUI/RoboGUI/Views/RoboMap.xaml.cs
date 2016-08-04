@@ -124,6 +124,139 @@ namespace RoboGUI.Views
             this.scanmapScaleTransform.ScaleY = this.zoom * -1;
         }
 
+        private void RoboMap_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Reset();
+
+            //this.UpdateRobotPosition(new Point(200, 200));
+
+            //this.UpdateRobotRotation(45);
+
+            //this.AddField(new Field(0, 0) { State = Fieldstate.free });
+            this.AddField(new Field(5, 5) { State = Fieldstate.freeScanned });
+            this.AddField(new Field(-5, -5) { State = Fieldstate.occupied });
+        }
+
+        private void Reset()
+        {
+            this.UpdateZoom(1.0);
+
+            this.fields.Clear();
+
+            this.scanMap.Children.Clear();
+
+            this.ResetRoute();
+
+            this.UpdateRobotPosition(new Point(0, 0));
+            this.UpdateRobotRotation(0);
+
+            this.dragAction = false;
+
+            this.GenerateGridMap(10000, 10000, this.zoom);
+        }
+
+        private void ResetRoute()
+        {
+            this.createdRoute.Clear();
+            this.routeMap.Children.Clear();
+
+            this.createdRoute.Add(new TravelPoint(new Point(0, 0)));
+        }
+
+        private void GenerateGridMap(double width, double height, double zoom)
+        {
+            this.gridMap.Children.Clear();
+
+            /*Rectangle start = new Rectangle();
+
+            start.Width = CellSize;
+            start.Height = CellSize;
+
+            Canvas.SetLeft(start, CellSize / -2);
+            Canvas.SetTop(start, CellSize / -2);
+
+            start.Fill = Brushes.White;
+
+            this.gridMap.Children.Add(start);*/
+
+            Field start = new Field(0, 0);
+            start.State = Fieldstate.freeScanned;
+
+            this.AddField(start);
+
+            for (double i = CellSize / -2; i <= width; i += (zoom * CellSize))
+            {
+                Line l1 = new Line();
+                l1.X1 = i;
+                l1.X2 = i;
+
+                l1.Y1 = CellSize / -2 + height * -1;
+                l1.Y2 = CellSize / 2 + height;
+
+                l1.Stroke = Brushes.DarkGray;
+                l1.StrokeThickness = 0.5;
+
+                gridMap.Children.Add(l1);
+            }
+
+            for (double i = CellSize / -2; i > width * -1; i -= (zoom * CellSize))
+            {
+                Line l1 = new Line();
+                l1.X1 = i;
+                l1.X2 = i;
+
+                l1.Y1 = CellSize / -2 + height * -1;
+                l1.Y2 = CellSize / 2 + height;
+
+                l1.Stroke = Brushes.DarkGray;
+                l1.StrokeThickness = 0.5;
+
+                gridMap.Children.Add(l1);
+            }
+
+            for (double i = CellSize / 2; i <= height; i += (zoom * CellSize))
+            {
+                Line l1 = new Line();
+                l1.Y1 = i;
+                l1.Y2 = i;
+
+                l1.X1 = CellSize / -2 + width * -1;
+                l1.X2 = CellSize / 2 + width;
+
+                l1.Stroke = Brushes.DarkGray;
+                l1.StrokeThickness = 0.5;
+
+                gridMap.Children.Add(l1);
+            }
+
+            for (double i = CellSize / -2; i > height * -1; i -= (zoom * CellSize))
+            {
+                Line l1 = new Line();
+                l1.Y1 = i;
+                l1.Y2 = i;
+
+                l1.X1 = CellSize / -2 + width * -1;
+                l1.X2 = CellSize / 2 + width;
+
+                l1.Stroke = Brushes.DarkGray;
+                l1.StrokeThickness = 0.5;
+
+                gridMap.Children.Add(l1);
+            }
+        }
+
+        private void mainGrid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                this.UpdateZoom(this.zoom * 1.25);
+            }
+            else
+            {
+                this.UpdateZoom(this.zoom / 1.25);
+            }
+        }
+
         private void AddField(Field field)
         {
             this.fields.Add(field);
@@ -219,134 +352,26 @@ namespace RoboGUI.Views
         {
             TravelPoint tp = (TravelPoint)((Ellipse)sender).DataContext;
 
-            this.createdRoute.Remove(tp);
-            List<TravelPoint> copied = new List<TravelPoint>(this.createdRoute);
-
-            this.createdRoute.Clear();
-
-            this.routeMap.Children.Clear();
-
-            foreach (TravelPoint p in copied)
+            // The first travel point cannot be deleted because the start is always the first travel point.
+            if (this.createdRoute.IndexOf(tp) != 0)
             {
-                this.AddTravelPoint(p);
+                this.createdRoute.Remove(tp);
+                List<TravelPoint> copied = new List<TravelPoint>(this.createdRoute);
+
+                this.createdRoute.Clear();
+
+                this.routeMap.Children.Clear();
+
+                foreach (TravelPoint p in copied)
+                {
+                    this.AddTravelPoint(p);
+                }
             }
         }
 
         private void El_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             //routePropertiesGrid.DataContext = ((Ellipse)sender).DataContext;
-        }
-
-        private void RoboMap_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Reset();
-
-            //this.UpdateRobotPosition(new Point(200, 200));
-
-            //this.UpdateRobotRotation(45);
-
-            //this.AddField(new Field(0, 0) { State = Fieldstate.free });
-            this.AddField(new Field(5, 5) { State = Fieldstate.freeScanned });
-            this.AddField(new Field(-5, -5) { State = Fieldstate.occupied });
-        }
-
-        private void Reset()
-        {
-            this.zoom = 1.0;
-            this.fields.Clear();
-
-            this.dragAction = false;
-
-            this.GenerateGridMap(10000, 10000, this.zoom);
-        }
-
-        private void GenerateGridMap(double width, double height, double zoom)
-        {
-            this.gridMap.Children.Clear();
-
-            Rectangle start = new Rectangle();
-
-            start.Width = CellSize;
-            start.Height = CellSize;
-
-            Canvas.SetLeft(start, CellSize / -2);
-            Canvas.SetTop(start, CellSize / -2);
-
-            start.Fill = Brushes.White;
-
-            this.gridMap.Children.Add(start);
-
-            for (double i = CellSize / -2; i <= width; i += (zoom * CellSize))
-            {
-                Line l1 = new Line();
-                l1.X1 = i;
-                l1.X2 = i;
-
-                l1.Y1 = CellSize / -2 + height * -1;
-                l1.Y2 = CellSize / 2 + height;
-
-                l1.Stroke = Brushes.DarkGray;
-                l1.StrokeThickness = 0.5;
-
-                gridMap.Children.Add(l1);
-            }
-
-            for (double i = CellSize / -2; i > width * -1; i -= (zoom * CellSize))
-            {
-                Line l1 = new Line();
-                l1.X1 = i;
-                l1.X2 = i;
-
-                l1.Y1 = CellSize / -2 + height * -1;
-                l1.Y2 = CellSize / 2 + height;
-
-                l1.Stroke = Brushes.DarkGray;
-                l1.StrokeThickness = 0.5;
-
-                gridMap.Children.Add(l1);
-            }
-
-            for (double i = CellSize / 2; i <= height; i += (zoom * CellSize))
-            {
-                Line l1 = new Line();
-                l1.Y1 = i;
-                l1.Y2 = i;
-
-                l1.X1 = CellSize / -2 + width * -1;
-                l1.X2 = CellSize / 2 + width;
-
-                l1.Stroke = Brushes.DarkGray;
-                l1.StrokeThickness = 0.5;
-
-                gridMap.Children.Add(l1);
-            }
-
-            for (double i = CellSize / -2; i > height * -1; i -= (zoom * CellSize))
-            {
-                Line l1 = new Line();
-                l1.Y1 = i;
-                l1.Y2 = i;
-
-                l1.X1 = CellSize / -2 + width * -1;
-                l1.X2 = CellSize / 2 + width;
-
-                l1.Stroke = Brushes.DarkGray;
-                l1.StrokeThickness = 0.5;
-
-                gridMap.Children.Add(l1);
-            }
-        }
-
-        private void mainGrid_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                this.UpdateZoom(this.zoom * 1.25);
-            }
-            else
-            {
-                this.UpdateZoom(this.zoom / 1.25);
-            }
         }
 
         private void robotPositionPolygon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -394,8 +419,7 @@ namespace RoboGUI.Views
 
         private void clearroute_Click(object sender, RoutedEventArgs e)
         {
-            this.createdRoute.Clear();
-            this.routeMap.Children.Clear();
+            this.ResetRoute();
         }
     }
 }
