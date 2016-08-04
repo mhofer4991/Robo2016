@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="IManualRobotInput.cs" />
     <Compile Include="RemoteInputHandler.cs" />
-    <Compile Include="InputSender.cs" />
+    <Compile Include="IRemoteInputSender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XBoxRobotInput.cs" />
