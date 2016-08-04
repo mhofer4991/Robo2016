@@ -1,6 +1,7 @@
 ﻿using GeneralLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -64,11 +65,20 @@ namespace Network
 
         private void SendData(byte code, byte[] data)
         {
-            NetworkStream stream = client.GetStream();
-            byte[] newMsg = Helper.BuildMessage(code, data);
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] newMsg = Helper.BuildMessage(code, data);
 
-            stream.Write(newMsg, 0, newMsg.Length);
-            stream.Flush();
+                stream.Write(newMsg, 0, newMsg.Length);
+                stream.Flush();
+            }
+            catch (IOException e)
+            {
+            }
+            catch (SocketException e)
+            {
+            }
         }
 
         private void HandleClient(object client)

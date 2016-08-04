@@ -31,7 +31,7 @@ namespace RoboGUI.Views
 
         private List<TravelPoint> createdRoute;
 
-        private Position currentRobotPosition;
+        private Point currentRobotPosition;
 
         private double currentRobotRotation;
 
@@ -92,7 +92,7 @@ namespace RoboGUI.Views
             }
         }
 
-        public void UpdateRobotPosition(Position newPosition)
+        public void UpdateRobotPosition(Point newPosition)
         {
             this.currentRobotPosition = newPosition;
 
@@ -241,9 +241,9 @@ namespace RoboGUI.Views
         {
             this.Reset();
 
-            this.UpdateRobotPosition(new Position(200, 200));
+            //this.UpdateRobotPosition(new Point(200, 200));
 
-            this.UpdateRobotRotation(45);
+            //this.UpdateRobotRotation(45);
 
             //this.AddField(new Field(0, 0) { State = Fieldstate.free });
             this.AddField(new Field(5, 5) { State = Fieldstate.freeScanned });
