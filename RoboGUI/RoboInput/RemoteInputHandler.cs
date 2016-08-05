@@ -23,6 +23,10 @@ namespace RoboInput
 
         private IRemoteInputSender inputSender;
 
+        private bool isMoving;
+
+        private bool isRotating;
+
         public RemoteInputHandler(IManualRobotInput robotInput, IRemoteInputSender inputSender)
         {
             this.robotInput = robotInput;
@@ -34,6 +38,9 @@ namespace RoboInput
             this.robotInput.OnStopMovement += RobotInput_OnStopMovement;
 
             this.inputSender = inputSender;
+
+            this.isMoving = false;
+            this.isRotating = false;
         }
 
         public void Start()
@@ -48,30 +55,106 @@ namespace RoboInput
 
         private void RobotInput_OnMoveForward(bool released)
         {
-            ControlInput input = new ControlInput(CODE_FORWARD, released);
+            if (!released)
+            {
+                if (!isRotating)
+                {
+                    ControlInput input = new ControlInput(CODE_FORWARD, released);
 
-            this.inputSender.SendInput(input);
+                    this.inputSender.SendInput(input);
+
+                    isMoving = true;
+                }
+            }
+            else
+            {
+                if (isMoving)
+                {
+                    ControlInput input = new ControlInput(CODE_FORWARD, released);
+
+                    this.inputSender.SendInput(input);
+
+                    isMoving = false;
+                }
+            }
         }
 
         private void RobotInput_OnMoveBackward(bool released)
         {
-            ControlInput input = new ControlInput(CODE_BACKWARD, released);
+            if (!released)
+            {
+                if (!isRotating)
+                {
+                    ControlInput input = new ControlInput(CODE_BACKWARD, released);
 
-            this.inputSender.SendInput(input);
+                    this.inputSender.SendInput(input);
+
+                    isMoving = true;
+                }
+            }
+            else
+            {
+                if (isMoving)
+                {
+                    ControlInput input = new ControlInput(CODE_BACKWARD, released);
+
+                    this.inputSender.SendInput(input);
+
+                    isMoving = false;
+                }
+            }
         }
 
         private void RobotInput_OnTurnRight(bool released)
         {
-            ControlInput input = new ControlInput(CODE_RIGHT, released);
+            if (!released)
+            {
+                if (!isMoving)
+                {
+                    ControlInput input = new ControlInput(CODE_RIGHT, released);
 
-            this.inputSender.SendInput(input);
+                    this.inputSender.SendInput(input);
+
+                    isRotating = true;
+                }
+            }
+            else
+            {
+                if (isRotating)
+                {
+                    ControlInput input = new ControlInput(CODE_RIGHT, released);
+
+                    this.inputSender.SendInput(input);
+
+                    isRotating = false;
+                }
+            }
         }
 
         private void RobotInput_OnTurnLeft(bool released)
         {
-            ControlInput input = new ControlInput(CODE_LEFT, released);
+            if (!released)
+            {
+                if (!isMoving)
+                {
+                    ControlInput input = new ControlInput(CODE_LEFT, released);
 
-            this.inputSender.SendInput(input);
+                    this.inputSender.SendInput(input);
+
+                    isRotating = true;
+                }
+            }
+            else
+            {
+                if (isRotating)
+                {
+                    ControlInput input = new ControlInput(CODE_LEFT, released);
+
+                    this.inputSender.SendInput(input);
+
+                    isRotating = false;
+                }
+            }
         }
 
         private void RobotInput_OnStopMovement()

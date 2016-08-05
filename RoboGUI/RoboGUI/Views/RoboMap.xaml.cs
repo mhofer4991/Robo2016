@@ -141,9 +141,7 @@ namespace RoboGUI.Views
         {
             this.UpdateZoom(1.0);
 
-            this.fields.Clear();
-
-            this.scanMap.Children.Clear();
+            this.ResetMap();
 
             this.ResetRoute();
 
@@ -161,6 +159,12 @@ namespace RoboGUI.Views
             this.routeMap.Children.Clear();
 
             this.createdRoute.Add(new TravelPoint(new Point(0, 0)));
+        }
+
+        private void ResetMap()
+        {
+            this.scanMap.Children.Clear();
+            this.fields.Clear();
         }
 
         private void GenerateGridMap(double width, double height, double zoom)

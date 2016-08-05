@@ -8,6 +8,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
     <Grid>
-        <views:RoboMap Margin="20" x:Name="map1"></views:RoboMap>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <StackPanel>
+                <Button Name="connectButton" Click="connectButton_Click" Content="Connect"></Button>
+                <Button IsEnabled="False" Name="disconnectButton" Click="disconnectButton_Click" Content="Disconnect"></Button>
+                <Button Name="calibrateButton" Click="calibrateButton_Click" Content="Calibrate"></Button>
+            </StackPanel>
+        </Grid>
+        <views:RoboMap Grid.Column="1" Margin="20" x:Name="map1"></views:RoboMap>
     </Grid>
 </Window>

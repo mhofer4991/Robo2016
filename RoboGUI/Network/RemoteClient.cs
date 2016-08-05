@@ -20,6 +20,8 @@ namespace Network
 
         public const byte MSGCODE_ROBOT_STATUS_UPDATE = 5;
 
+        public const byte MSGCODE_ROBOT_CALIBRATE_REQUEST = 6;
+
         private TcpClient client;
 
         public RemoteClient()
@@ -28,7 +30,19 @@ namespace Network
 
         public delegate void RoboStatusUpdated(RoboStatus newStatus);
 
+        public delegate void RobotConnected();
+
+        public delegate void RobotDisconnected();
+
+        public delegate void ConnectionFailed();
+
         public event RoboStatusUpdated OnRoboStatusUpdated;
+
+        public event RobotConnected OnRobotConnected;
+
+        public event RobotDisconnected OnRobotDisconnected;
+
+        public event ConnectionFailed OnConnectionFailed;
 
         public bool IsRunning
         {
@@ -42,39 +56,70 @@ namespace Network
             private set;
         }
 
-        public bool Connect(string address)
+        public void Connect(string address)
         {
             this.client = new TcpClient();
             IPEndPoint ip = new IPEndPoint(IPAddress.Parse(address), PORT);
             IsConnected = false;
 
-            try
+            Task.Factory.StartNew(() =>
             {
-                client.Connect(ip);
+                try
+                {
+                    client.Connect(ip);
 
-                IsRunning = true;
-                IsConnected = true;
+                    IsRunning = true;
+                    IsConnected = true;
 
-                Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
-                t.IsBackground = true;
-                t.Start(client);
+                    Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
+                    t.IsBackground = true;
+                    t.Start(client);
 
-                return true;
-            }
-            catch (SocketException)
-            {
-                return false;
-            }
+                    if (this.OnRobotConnected != null)
+                    {
+                        this.OnRobotConnected();
+                    }
+                }
+                catch (SocketException)
+                {
+                    if (this.OnConnectionFailed != null)
+                    {
+                        this.OnConnectionFailed();
+                    }
+                }
+            });
         }
 
         public void Stop()
         {
+            try
+            {
+                this.client.Close();
+            }
+            catch (IOException e)
+            {
+            }
+            catch (SocketException e)
+            {
+            }
+
             IsRunning = false;
+            IsConnected = false;
+
+            if (this.OnRobotDisconnected != null)
+            {
+                this.OnRobotDisconnected();
+            }
         }
 
         public void SendInput(ControlInput controlInput)
         {
             this.SendMessage(MSGCODE_REMOTE_CONTROL_INPUT, controlInput);
+        }
+
+        public void SendCalibratingRequest()
+        {
+            this.SendMessage(MSGCODE_ROBOT_CALIBRATE_REQUEST, MSGCODE_ROBOT_CALIBRATE_REQUEST);
         }
 
         public void SendMessage(byte code, object msg)
@@ -84,37 +129,39 @@ namespace Network
 
         private void SendData(byte code, byte[] data)
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                if (this.IsConnected)
+                try
                 {
-                    NetworkStream stream = client.GetStream();
-                    byte[] newMsg = Helper.BuildMessage(code, data);
+                    if (this.IsConnected)
+                    {
+                        NetworkStream stream = client.GetStream();
+                        byte[] newMsg = Helper.BuildMessage(code, data);
 
-                    stream.Write(newMsg, 0, newMsg.Length);
-                    stream.Flush();
+                        stream.Write(newMsg, 0, newMsg.Length);
+                        stream.Flush();
+                    }
                 }
-            }
-            catch (IOException e)
-            {
-                IsConnected = false;
-                this.Stop();
-            }
-            catch (SocketException e)
-            {
-                IsConnected = false;
-                this.Stop();
-            }
+                catch (IOException e)
+                {
+                    this.Stop();
+                }
+                catch (SocketException e)
+                {
+                    this.Stop();
+                }
+            });
         }
 
         private void HandleClient(object client)
         {
             TcpClient tcp = (TcpClient)client;
             NetworkStream stream = tcp.GetStream();
+            bool okay = true;
             
             try
             {
-                while (IsRunning)
+                while (IsRunning && okay)
                 {
                     if (stream.DataAvailable)
                     {
@@ -145,29 +192,40 @@ namespace Network
                                     }
                                 }
 
-                                HandleData(code[0], data);
+                                if (!HandleData(code[0], data))
+                                {
+                                    // Handling data was not successful.
+                                    okay = false;
+                                }
                             }
                         }
+                    }
+                    else if (!Helper.IsConnected(tcp.Client))
+                    {
+                        okay = false;
                     }
                     else
                     {
                         Thread.Sleep(1000);
                     }
                 }
+
+                if (!okay)
+                {
+                    this.Stop();
+                }
             }
             catch (IOException e)
             {
-                IsConnected = false;
                 this.Stop();
             }
             catch (SocketException e)
             {
-                IsConnected = false;
                 this.Stop();
             }
         }
 
-        private void HandleData(byte code, byte[] data)
+        private bool HandleData(byte code, byte[] data)
         {
             // Handle data
 
@@ -182,6 +240,12 @@ namespace Network
 
                 //this.SendData(4, Helper.GetBytesFromMessage(rs));
             }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
