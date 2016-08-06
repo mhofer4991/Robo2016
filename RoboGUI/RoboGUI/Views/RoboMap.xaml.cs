@@ -36,7 +36,13 @@ namespace RoboGUI.Views
         private double currentRobotRotation;
 
         // drag action
-        private bool dragAction;
+        private bool mapDown;
+
+        private bool moveMap;
+
+        private bool robotDown;
+
+        private bool moveRobot;
 
         private Point oldMouse;
         private double tx;
@@ -48,6 +54,10 @@ namespace RoboGUI.Views
 
         private double mousePositionY;
 
+        //
+
+        private Map currentMap;
+
         public RoboMap()
         {
             InitializeComponent();
@@ -58,6 +68,14 @@ namespace RoboGUI.Views
             this.Loaded += RoboMap_Loaded;
 
             this.mousePositionGrid.DataContext = this;
+
+            this.fieldStatesComboBox.ItemsSource = new Fieldstate[] 
+            {
+                Fieldstate.unscanned,
+                Fieldstate.free,
+                Fieldstate.freeScanned,
+                Fieldstate.occupied
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -124,6 +142,20 @@ namespace RoboGUI.Views
             this.scanmapScaleTransform.ScaleY = this.zoom * -1;
         }
 
+        public void UpdateMap(Map map)
+        {
+            ResetMap();
+            this.currentMap = map;
+
+            for (int i = 0; i < map.Fields.GetUpperBound(0) + 1; i++)
+            {
+                for (int j = 0; j < map.Fields.GetUpperBound(1) + 1; j++)
+                {
+                    this.AddField(map.Fields[i, j]);
+                }
+            }
+        }
+
         private void RoboMap_Loaded(object sender, RoutedEventArgs e)
         {
             this.Reset();
@@ -133,8 +165,8 @@ namespace RoboGUI.Views
             //this.UpdateRobotRotation(45);
 
             //this.AddField(new Field(0, 0) { State = Fieldstate.free });
-            this.AddField(new Field(5, 5) { State = Fieldstate.freeScanned });
-            this.AddField(new Field(-5, -5) { State = Fieldstate.occupied });
+            //this.AddField(new Field(5, 5) { State = Fieldstate.freeScanned });
+            //this.AddField(new Field(-5, -5) { State = Fieldstate.occupied });
         }
 
         private void Reset()
@@ -148,7 +180,7 @@ namespace RoboGUI.Views
             this.UpdateRobotPosition(new Point(0, 0));
             this.UpdateRobotRotation(0);
 
-            this.dragAction = false;
+            this.moveMap = false;
 
             this.GenerateGridMap(10000, 10000, this.zoom);
         }
@@ -163,6 +195,11 @@ namespace RoboGUI.Views
 
         private void ResetMap()
         {
+            this.currentMap = new Map();
+            this.currentMap.Fields = new Field[1, 1];
+            this.currentMap.Fields[0, 0] = new Field(0, 0);
+            this.currentMap.Fields[0, 0].State = Fieldstate.free;
+
             this.scanMap.Children.Clear();
             this.fields.Clear();
         }
@@ -274,8 +311,45 @@ namespace RoboGUI.Views
             Canvas.SetTop(rect, field.Position.Y * CellSize - CellSize / 2);
 
             rect.MouseLeftButtonUp += Rect_MouseLeftButtonUp;
+            rect.MouseRightButtonUp += Rect_MouseRightButtonUp;
+            rect.MouseMove += Rect_MouseMove;
             rect.DataContext = field;
 
+            this.FillRectangleByField(rect, field);
+
+            this.scanMap.Children.Add(rect);
+        }
+
+        private void Rect_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            this.HandleRectangle((Rectangle)sender);
+        }
+
+        private void Rect_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Mouse.RightButton == MouseButtonState.Pressed)
+            {
+                this.HandleRectangle((Rectangle)sender);
+            }
+        }
+
+        private void HandleRectangle(Rectangle rect)
+        {
+            Field field = (Field)rect.DataContext;
+
+            // We assume that the 0 0 position is the robot position
+            // so it cannot be marked as occupied.
+            if (!(field.Position.X == 0 && field.Position.Y == 0))
+            {
+                field.State = (Fieldstate)fieldStatesComboBox.SelectedItem;
+                rect.Fill = Brushes.DarkRed;
+
+                this.FillRectangleByField(rect, field);
+            }
+        }
+
+        private void FillRectangleByField(Rectangle rect, Field field)
+        {
             if (field.State == Fieldstate.free)
             {
                 rect.Fill = Brushes.DarkGreen;
@@ -292,27 +366,52 @@ namespace RoboGUI.Views
             {
                 rect.Fill = Brushes.Black;
             }
-
-            this.scanMap.Children.Add(rect);
         }
 
         private void Rect_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (dragAction)
+            Field field = (Field)((Rectangle)sender).DataContext;
+            Point p = e.GetPosition(scanMap);
+
+            if (moveMap)
             {
                 return;
             }
 
-            Field field = (Field)((Rectangle)sender).DataContext;
-            Point p = e.GetPosition(scanMap);
-
-            // Maybe only free scanned?
-            if (field.State == Fieldstate.free || field.State == Fieldstate.freeScanned)
+            if (moveRobot)
             {
-                AddTravelPoint(new TravelPoint(new Point(p.X, p.Y)));
+                if (field.State == Fieldstate.free || field.State == Fieldstate.freeScanned)
+                {
+                    // Translate the map to make sure the robot is still at the position 0 0
+                    Map newMap = new Map();
+                    newMap.Fields = this.currentMap.Fields;
+                    int tempX = field.Position.X;
+                    int tempY = field.Position.Y;
+
+                    for (int i = 0; i < newMap.Fields.GetUpperBound(0) + 1; i++)
+                    {
+                        for (int j = 0; j < newMap.Fields.GetUpperBound(1) + 1; j++)
+                        {
+                            newMap.Fields[i, j].Position.X = newMap.Fields[i, j].Position.X - tempX;
+                            newMap.Fields[i, j].Position.Y = newMap.Fields[i, j].Position.Y - tempY;
+                        }
+                    }
+
+                    this.UpdateMap(newMap);
+                }
             }
-            //MousePositionX = p.X;
-            //MousePositionY = p.Y;
+            else
+            {
+                // Maybe only free scanned?
+                if (field.State == Fieldstate.free || field.State == Fieldstate.freeScanned)
+                {
+                    AddTravelPoint(new TravelPoint(new Point(
+                        field.Position.X * CellSize, 
+                        field.Position.Y * CellSize)));
+                }
+                //MousePositionX = p.X;
+                //MousePositionY = p.Y;
+            }
         }
 
         private void AddTravelPoint(TravelPoint tp)
@@ -378,33 +477,64 @@ namespace RoboGUI.Views
             //routePropertiesGrid.DataContext = ((Ellipse)sender).DataContext;
         }
 
-        private void robotPositionPolygon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void mainGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             //this.oldMouse = e.GetPosition(this);
-            this.oldMouse = e.GetPosition(this);
-            tx = scanmapTranslateTransform.X;
-            ty = scanmapTranslateTransform.Y;
+            if (!robotDown)
+            {
+                mapDown = true;
+
+                this.oldMouse = e.GetPosition(this);
+                tx = scanmapTranslateTransform.X;
+                ty = scanmapTranslateTransform.Y;
+            }
         }
 
-        private void robotPositionPolygon_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void mainGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            dragAction = false;
+            mapDown = false;
+            moveMap = false;
+            
+            robotDown = false;
+            moveRobot = false;
+
+            this.UpdateRobotPosition(new Point(0, 0));
+            this.robotPositionPolygon.IsHitTestVisible = true;
         }
 
-        private void robotPositionPolygon_MouseMove(object sender, MouseEventArgs e)
+        private void mainGrid_MouseMove(object sender, MouseEventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                dragAction = true;
+                moveMap = mapDown;
+                moveRobot = robotDown;
 
-                scanmapTranslateTransform.X = tx + e.GetPosition(this).X - oldMouse.X;
-                scanmapTranslateTransform.Y = ty + e.GetPosition(this).Y - oldMouse.Y;
+                if (moveMap)
+                {
+                    scanmapTranslateTransform.X = tx + e.GetPosition(this).X - oldMouse.X;
+                    scanmapTranslateTransform.Y = ty + e.GetPosition(this).Y - oldMouse.Y;
+                }
+                else if (moveRobot)
+                {
+                    robotTranslateTransform.X = tx + e.GetPosition(scanMap).X - oldMouse.X;
+                    robotTranslateTransform.Y = ty + e.GetPosition(scanMap).Y - oldMouse.Y;
+                }
             }
 
             Point p = e.GetPosition(scanMap);
 
             MousePositionX = Math.Round(p.X); // + (this.mainGrid.ActualWidth / zoom) / 2, 0);
             MousePositionY = Math.Round(p.Y); // + (this.mainGrid.ActualHeight / zoom) / 2, 0);
+        }
+
+        private void robotPositionPolygon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            robotDown = true;
+            robotPositionPolygon.IsHitTestVisible = false;
+
+            this.oldMouse = e.GetPosition(scanMap);
+            tx = robotTranslateTransform.X;
+            ty = robotTranslateTransform.Y;
         }
 
         private void Notify([CallerMemberName]string propertyName = null)
@@ -424,6 +554,28 @@ namespace RoboGUI.Views
         private void clearroute_Click(object sender, RoutedEventArgs e)
         {
             this.ResetRoute();
+        }
+
+        private void createmapButton_Click(object sender, RoutedEventArgs e)
+        {
+            MapCreatorDialog dia = new MapCreatorDialog();
+            
+            if (dia.ShowDialog() == true)
+            {
+                this.Reset();
+                Map newMap = new Map();
+                newMap.Fields = new Field[dia.MapWidth, dia.MapHeight];
+
+                for (int i = 0; i < dia.MapWidth; i++)
+                {
+                    for (int j = 0; j < dia.MapHeight; j++)
+                    {
+                        newMap.Fields[i, j] = new Field(i, j);
+                    }
+                }
+
+                this.UpdateMap(newMap);
+            }
         }
     }
 }

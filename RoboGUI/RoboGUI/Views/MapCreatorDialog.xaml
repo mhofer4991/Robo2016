@@ -1,0 +1,31 @@
+﻿<Window x:Class="RoboGUI.Views.MapCreatorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RoboGUI.Views"
+        mc:Ignorable="d"
+        Title="MapCreatorDialog" Height="200" Width="300" ResizeMode="NoResize">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="5">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Width="50" TextAlignment="Right" Text="Width: "></TextBlock>
+                <TextBox Text="{Binding MapWidth}" Width="100" Name="widthTextbox"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Width="50" TextAlignment="Right" Text="Height: "></TextBlock>
+                <TextBox Text="{Binding MapHeight}" Width="100" Name="heightTextbox"></TextBox>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Row="1" Background="#FFF2F2F2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="cancelButton" Margin="5" Width="100" Content="Cancel" Click="cancelButton_Click"></Button>
+                <Button Name="okButton" Margin="5" Width="100" Content="Ok" Click="okButton_Click"></Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -26,6 +26,7 @@ namespace Network
 
         public RemoteClient()
         {
+            this.client = new TcpClient();
         }
 
         public delegate void RoboStatusUpdated(RoboStatus newStatus);

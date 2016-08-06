@@ -16,15 +16,20 @@
             <StackPanel Orientation="Horizontal">
                 <Button Name="jumpcenter" Click="jumpcenter_Click">Go to center</Button>
                 <Button Name="clearroute" Click="clearroute_Click">Clear route</Button>
+                <Button Name="createmapButton" Click="createmapButton_Click">Create new map</Button>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock VerticalAlignment="Center" Text="Field state:"></TextBlock>
+                    <ComboBox SelectedIndex="0" Name="fieldStatesComboBox"></ComboBox>
+                </StackPanel>
             </StackPanel>
         </Grid>
         
         <Grid Background="Black" Name="mainGrid" Grid.Row="1"
               ClipToBounds="True"
               MouseWheel="mainGrid_MouseWheel"
-                MouseLeftButtonDown="robotPositionPolygon_MouseLeftButtonDown"
-                MouseLeftButtonUp="robotPositionPolygon_MouseLeftButtonUp"
-                MouseMove="robotPositionPolygon_MouseMove">
+                MouseLeftButtonDown="mainGrid_MouseLeftButtonDown"
+                MouseLeftButtonUp="mainGrid_MouseLeftButtonUp"
+                MouseMove="mainGrid_MouseMove">
             
         <Canvas Width="Auto" Height="Auto" Name="scanMap"
             HorizontalAlignment="Center"
@@ -62,7 +67,8 @@
                 </TransformGroup>
             </Canvas.RenderTransform>
 
-            <Polygon Fill="Red" x:Name="robotPositionPolygon">
+            <Polygon Fill="Red" x:Name="robotPositionPolygon" 
+                     MouseLeftButtonDown="robotPositionPolygon_MouseLeftButtonDown">
                 <Polygon.Points>
                     <Point X="0" Y="15"></Point>
                     <Point X="7" Y="-7"></Point>

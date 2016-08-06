@@ -56,6 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="TravelPoint.cs" />
+    <Compile Include="Views\MapCreatorDialog.xaml.cs">
+      <DependentUpon>MapCreatorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RoboMap.xaml.cs">
       <DependentUpon>RoboMap.xaml</DependentUpon>
     </Compile>
@@ -71,6 +74,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MapCreatorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RoboMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
