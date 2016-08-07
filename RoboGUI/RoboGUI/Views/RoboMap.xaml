@@ -14,12 +14,18 @@
         
         <Grid Grid.Row="0" Name="mapControl" Background="White">
             <StackPanel Orientation="Horizontal">
-                <Button Name="jumpcenter" Click="jumpcenter_Click">Go to center</Button>
-                <Button Name="clearroute" Click="clearroute_Click">Clear route</Button>
-                <Button Name="createmapButton" Click="createmapButton_Click">Create new map</Button>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock VerticalAlignment="Center" Text="Field state:"></TextBlock>
-                    <ComboBox SelectedIndex="0" Name="fieldStatesComboBox"></ComboBox>
+                <Button Padding="10 0 10 0" Name="loadmapButton" Click="loadmapButton_Click">Load map</Button>
+                <Button Padding="10 0 10 0" Name="savemapButton" Click="savemapButton_Click">Save map</Button>
+                <Button Padding="10 0 10 0" Name="editmapButton" Click="editmapButton_Click">Edit map</Button>
+                <Button Padding="10 0 10 0" Name="exitEditButton" Click="exitEditButton_Click" Visibility="Collapsed">Exit edit</Button>
+                <Button Padding="10 0 10 0" Name="jumpcenter" Click="jumpcenter_Click">Go to center</Button>
+                <Button Padding="10 0 10 0" Name="createmapButton" Click="createmapButton_Click">Create new map</Button>
+                <Button Padding="10 0 10 0" Name="clearroute" Click="clearroute_Click">Clear route</Button>
+                <StackPanel Orientation="Horizontal" Name="editModePanel" Visibility="Collapsed">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock VerticalAlignment="Center" Text="New field state:"></TextBlock>
+                        <ComboBox SelectedIndex="0" Name="fieldStatesComboBox"></ComboBox>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Grid>

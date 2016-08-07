@@ -55,6 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MapMode.cs" />
+    <Compile Include="Persistent.cs" />
     <Compile Include="TravelPoint.cs" />
     <Compile Include="Views\MapCreatorDialog.xaml.cs">
       <DependentUpon>MapCreatorDialog.xaml</DependentUpon>

@@ -1,4 +1,5 @@
 ﻿using GeneralLibrary;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,9 +55,11 @@ namespace RoboGUI.Views
 
         private double mousePositionY;
 
-        //
+        // edit
 
         private Map currentMap;
+
+        private MapMode currentMode;
 
         public RoboMap()
         {
@@ -153,6 +156,28 @@ namespace RoboGUI.Views
                 {
                     this.AddField(map.Fields[i, j]);
                 }
+            }
+        }
+
+        private void SwitchToMode(MapMode mode)
+        {
+            this.currentMode = mode;
+
+            if (mode == MapMode.Show)
+            {
+                clearroute.Visibility = Visibility.Visible;
+                editmapButton.Visibility = Visibility.Visible;
+                editModePanel.Visibility = Visibility.Collapsed;
+                exitEditButton.Visibility = Visibility.Collapsed;
+            }
+            else if (mode == MapMode.Edit)
+            {
+                clearroute.Visibility = Visibility.Collapsed;
+                editmapButton.Visibility = Visibility.Collapsed;
+                editModePanel.Visibility = Visibility.Visible;
+                exitEditButton.Visibility = Visibility.Visible;
+
+                this.ResetRoute();
             }
         }
 
@@ -322,29 +347,32 @@ namespace RoboGUI.Views
 
         private void Rect_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            this.HandleRectangle((Rectangle)sender);
+            this.ChangeStateOfRectangle((Rectangle)sender);
         }
 
         private void Rect_MouseMove(object sender, MouseEventArgs e)
         {
             if (Mouse.RightButton == MouseButtonState.Pressed)
             {
-                this.HandleRectangle((Rectangle)sender);
+                this.ChangeStateOfRectangle((Rectangle)sender);
             }
         }
 
-        private void HandleRectangle(Rectangle rect)
+        private void ChangeStateOfRectangle(Rectangle rect)
         {
-            Field field = (Field)rect.DataContext;
-
-            // We assume that the 0 0 position is the robot position
-            // so it cannot be marked as occupied.
-            if (!(field.Position.X == 0 && field.Position.Y == 0))
+            if (this.currentMode == MapMode.Edit)
             {
-                field.State = (Fieldstate)fieldStatesComboBox.SelectedItem;
-                rect.Fill = Brushes.DarkRed;
+                Field field = (Field)rect.DataContext;
 
-                this.FillRectangleByField(rect, field);
+                // We assume that the 0 0 position is the robot position
+                // so it cannot be marked as occupied.
+                if (!(field.Position.X == 0 && field.Position.Y == 0))
+                {
+                    field.State = (Fieldstate)fieldStatesComboBox.SelectedItem;
+                    rect.Fill = Brushes.DarkRed;
+
+                    this.FillRectangleByField(rect, field);
+                }
             }
         }
 
@@ -402,15 +430,18 @@ namespace RoboGUI.Views
             }
             else
             {
-                // Maybe only free scanned?
-                if (field.State == Fieldstate.free || field.State == Fieldstate.freeScanned)
+                if (this.currentMode == MapMode.Show)
                 {
-                    AddTravelPoint(new TravelPoint(new Point(
-                        field.Position.X * CellSize, 
-                        field.Position.Y * CellSize)));
+                    // Maybe only free scanned?
+                    if (field.State == Fieldstate.free || field.State == Fieldstate.freeScanned)
+                    {
+                        AddTravelPoint(new TravelPoint(new Point(
+                            field.Position.X * CellSize,
+                            field.Position.Y * CellSize)));
+                    }
+                    //MousePositionX = p.X;
+                    //MousePositionY = p.Y;
                 }
-                //MousePositionX = p.X;
-                //MousePositionY = p.Y;
             }
         }
 
@@ -529,12 +560,17 @@ namespace RoboGUI.Views
 
         private void robotPositionPolygon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            robotDown = true;
-            robotPositionPolygon.IsHitTestVisible = false;
+            // Robots position can only be changed in edit mode!
+            if (this.currentMode == MapMode.Edit)
+            {
+                robotDown = true;
+                // Make sure that the underlying field gets notified about the mouse up event.
+                robotPositionPolygon.IsHitTestVisible = false;
 
-            this.oldMouse = e.GetPosition(scanMap);
-            tx = robotTranslateTransform.X;
-            ty = robotTranslateTransform.Y;
+                this.oldMouse = e.GetPosition(scanMap);
+                tx = robotTranslateTransform.X;
+                ty = robotTranslateTransform.Y;
+            }
         }
 
         private void Notify([CallerMemberName]string propertyName = null)
@@ -575,6 +611,57 @@ namespace RoboGUI.Views
                 }
 
                 this.UpdateMap(newMap);
+            }
+        }
+
+        private void editmapButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.SwitchToMode(MapMode.Edit);
+        }
+
+        private void exitEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.SwitchToMode(MapMode.Show);
+        }
+
+        //
+        // Persistence loading
+        //
+
+        private void loadmapButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dia = new OpenFileDialog();
+            dia.FileName = "";
+            dia.DefaultExt = "rmap";
+
+            string filename = string.Empty;
+
+            if (dia.ShowDialog() == true)
+            {
+                filename = dia.FileName;
+
+                Map map = Persistent.LoadMap(filename);
+
+                if (map != null)
+                {
+                    this.UpdateMap(map);
+                }
+            }
+        }
+
+        private void savemapButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dia = new SaveFileDialog();
+            dia.FileName = "";
+            dia.DefaultExt = "rmap";
+            dia.AddExtension = true;
+
+            string filename = string.Empty;
+
+            if (dia.ShowDialog() == true)
+            {
+                filename = dia.FileName;
+                Persistent.SaveMap(this.currentMap, filename);
             }
         }
     }

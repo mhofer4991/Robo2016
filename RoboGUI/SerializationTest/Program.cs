@@ -16,7 +16,7 @@ namespace SerializationTest
     {
         static void Main(string[] args)
         {
-            Field f = new Field(21, 6);
+            /*Field f = new Field(21, 6);
             Map m = new Map();
             m.Fields = new Field[1, 1];
             m.Fields[0, 0] = f;
@@ -43,7 +43,24 @@ namespace SerializationTest
             // Deserializing from JSON
             Map map = JsonConvert.DeserializeObject<Map>(jsonText);
 
-            Console.ReadLine();
+            Console.ReadLine();*/
+            Field[,] fields = new Field[200, 200];
+
+            for (int i = 0; i < 200; i++)
+            {
+                for (int j = 0; j < 200; j++)
+                {
+                    fields[i, j] = new Field(i, j) { State = Fieldstate.free };
+                }
+            }
+
+            Map ma = new Map();
+
+            ma.Fields = fields;
+
+            string text = JsonConvert.SerializeObject(ma);
+
+            File.AppendAllText("hallo.txt", text);
         }     
     }
 }
