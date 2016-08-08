@@ -14,6 +14,7 @@
         
         <Grid Grid.Row="0" Name="mapControl" Background="White">
             <StackPanel Orientation="Horizontal">
+                <Button Padding="10 0 10 0" Name="runrouteButton" Click="runrouteButton_Click">Run route</Button>
                 <Button Padding="10 0 10 0" Name="loadmapButton" Click="loadmapButton_Click">Load map</Button>
                 <Button Padding="10 0 10 0" Name="savemapButton" Click="savemapButton_Click">Save map</Button>
                 <Button Padding="10 0 10 0" Name="editmapButton" Click="editmapButton_Click">Edit map</Button>

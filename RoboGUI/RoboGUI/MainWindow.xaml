@@ -19,6 +19,6 @@
                 <Button Name="calibrateButton" Click="calibrateButton_Click" Content="Calibrate"></Button>
             </StackPanel>
         </Grid>
-        <views:RoboMap Grid.Column="1" Margin="20" x:Name="map1"></views:RoboMap>
+        <views:RoboMap OnRouteRun="map1_OnRouteRun" Grid.Column="1" Margin="20" x:Name="map1"></views:RoboMap>
     </Grid>
 </Window>

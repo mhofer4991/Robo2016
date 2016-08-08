@@ -53,6 +53,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoboStatus.cs" />
     <Compile Include="Route.cs" />
+    <Compile Include="TravelRequest.cs" />
+    <Compile Include="TravelResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

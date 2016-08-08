@@ -55,7 +55,7 @@ namespace RoboInput
 
         private void RobotInput_OnMoveForward(bool released)
         {
-            if (!released)
+            /*if (!released)
             {
                 if (!isRotating)
                 {
@@ -76,12 +76,15 @@ namespace RoboInput
 
                     isMoving = false;
                 }
-            }
+            }*/
+            ControlInput input = new ControlInput(CODE_FORWARD, released);
+
+            this.inputSender.SendInput(input);
         }
 
         private void RobotInput_OnMoveBackward(bool released)
         {
-            if (!released)
+            /*if (!released)
             {
                 if (!isRotating)
                 {
@@ -102,12 +105,15 @@ namespace RoboInput
 
                     isMoving = false;
                 }
-            }
+            }*/
+            ControlInput input = new ControlInput(CODE_BACKWARD, released);
+
+            this.inputSender.SendInput(input);
         }
 
         private void RobotInput_OnTurnRight(bool released)
         {
-            if (!released)
+            /*if (!released)
             {
                 if (!isMoving)
                 {
@@ -128,12 +134,18 @@ namespace RoboInput
 
                     isRotating = false;
                 }
+            }*/
+            if (released)
+            {
+                ControlInput input = new ControlInput(CODE_RIGHT, released, true, 90);
+
+                this.inputSender.SendInput(input);
             }
         }
 
         private void RobotInput_OnTurnLeft(bool released)
         {
-            if (!released)
+            /*if (!released)
             {
                 if (!isMoving)
                 {
@@ -154,6 +166,12 @@ namespace RoboInput
 
                     isRotating = false;
                 }
+            }*/
+            if (released)
+            {
+                ControlInput input = new ControlInput(CODE_LEFT, released, true, 90);
+
+                this.inputSender.SendInput(input);
             }
         }
 

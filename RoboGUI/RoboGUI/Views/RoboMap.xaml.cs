@@ -24,13 +24,13 @@ namespace RoboGUI.Views
     /// </summary>
     public partial class RoboMap : UserControl, INotifyPropertyChanged
     {
-        private static double CellSize = 50;
+        private static int CellSize = 50;
 
         private double zoom;
 
         private List<Field> fields;
 
-        private List<TravelPoint> createdRoute;
+        private List<Position> createdRoute;
 
         private Point currentRobotPosition;
 
@@ -66,7 +66,7 @@ namespace RoboGUI.Views
             InitializeComponent();
 
             this.fields = new List<Field>();
-            this.createdRoute = new List<TravelPoint>();
+            this.createdRoute = new List<Position>();
 
             this.Loaded += RoboMap_Loaded;
 
@@ -74,12 +74,14 @@ namespace RoboGUI.Views
 
             this.fieldStatesComboBox.ItemsSource = new Fieldstate[] 
             {
-                Fieldstate.unscanned,
-                Fieldstate.free,
                 Fieldstate.freeScanned,
                 Fieldstate.occupied
             };
         }
+
+        public delegate void RouteRun(Map map, Route route);
+
+        public event RouteRun OnRouteRun;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -159,6 +161,16 @@ namespace RoboGUI.Views
             }
         }
 
+        public void UpdateRoute(Route route)
+        {
+            this.ResetRoute();
+
+            foreach (Position pos in route.Points)
+            {
+                this.AddTravelPoint(pos);
+            }
+        }
+
         private void SwitchToMode(MapMode mode)
         {
             this.currentMode = mode;
@@ -215,7 +227,7 @@ namespace RoboGUI.Views
             this.createdRoute.Clear();
             this.routeMap.Children.Clear();
 
-            this.createdRoute.Add(new TravelPoint(new Point(0, 0)));
+            this.createdRoute.Add(new Position(0, 0));
         }
 
         private void ResetMap()
@@ -435,9 +447,9 @@ namespace RoboGUI.Views
                     // Maybe only free scanned?
                     if (field.State == Fieldstate.free || field.State == Fieldstate.freeScanned)
                     {
-                        AddTravelPoint(new TravelPoint(new Point(
-                            field.Position.X * CellSize,
-                            field.Position.Y * CellSize)));
+                        AddTravelPoint(new Position(
+                            field.Position.X * 1,
+                            field.Position.Y * 1));
                     }
                     //MousePositionX = p.X;
                     //MousePositionY = p.Y;
@@ -445,15 +457,15 @@ namespace RoboGUI.Views
             }
         }
 
-        private void AddTravelPoint(TravelPoint tp)
+        private void AddTravelPoint(Position tp)
         {
             Ellipse el = new Ellipse();
             el.Width = 10;
             el.Height = 10;
 
             el.Fill = Brushes.Magenta;
-            Canvas.SetLeft(el, tp.Position.X - el.Width / 2);
-            Canvas.SetTop(el, tp.Position.Y - el.Height / 2);
+            Canvas.SetLeft(el, tp.X * CellSize - el.Width / 2);
+            Canvas.SetTop(el, tp.Y * CellSize - el.Height / 2);
 
             if (this.createdRoute.Count > 0)
             {
@@ -461,11 +473,11 @@ namespace RoboGUI.Views
                 l1.Stroke = Brushes.Magenta;
                 l1.StrokeThickness = 1;
 
-                l1.X1 = tp.Position.X;
-                l1.Y1 = tp.Position.Y;
+                l1.X1 = tp.X * CellSize;
+                l1.Y1 = tp.Y * CellSize;
 
-                l1.X2 = this.createdRoute[this.createdRoute.Count - 1].Position.X;
-                l1.Y2 = this.createdRoute[this.createdRoute.Count - 1].Position.Y;
+                l1.X2 = this.createdRoute[this.createdRoute.Count - 1].X * CellSize;
+                l1.Y2 = this.createdRoute[this.createdRoute.Count - 1].Y * CellSize;
 
                 routeMap.Children.Add(l1);
             }
@@ -484,19 +496,19 @@ namespace RoboGUI.Views
 
         private void El_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            TravelPoint tp = (TravelPoint)((Ellipse)sender).DataContext;
+            Position tp = (Position)((Ellipse)sender).DataContext;
 
             // The first travel point cannot be deleted because the start is always the first travel point.
             if (this.createdRoute.IndexOf(tp) != 0)
             {
                 this.createdRoute.Remove(tp);
-                List<TravelPoint> copied = new List<TravelPoint>(this.createdRoute);
+                List<Position> copied = new List<Position>(this.createdRoute);
 
                 this.createdRoute.Clear();
 
                 this.routeMap.Children.Clear();
 
-                foreach (TravelPoint p in copied)
+                foreach (Position p in copied)
                 {
                     this.AddTravelPoint(p);
                 }
@@ -662,6 +674,24 @@ namespace RoboGUI.Views
             {
                 filename = dia.FileName;
                 Persistent.SaveMap(this.currentMap, filename);
+            }
+        }
+
+        private void runrouteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.createdRoute.Count > 1)
+            {
+                // Return back
+                this.AddTravelPoint(new Position(0, 0));
+
+                if (this.OnRouteRun != null)
+                {
+                    this.OnRouteRun(this.currentMap, new Route(this.createdRoute));
+                }
+            }
+            else
+            {
+                MessageBox.Show("You have to create a route first!");
             }
         }
     }

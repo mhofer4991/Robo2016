@@ -22,6 +22,12 @@ namespace Network
 
         public const byte MSGCODE_ROBOT_CALIBRATE_REQUEST = 6;
 
+        public const byte MSGCODE_ROBOT_TRAVEL_ROUTE_REQUEST = 7;
+
+        public const byte MSGCODE_ROBOT_TRAVEL_ROUTE_RESPONSE = 8;
+
+        public const byte MSGCODE_ROBOT_SCAN_MAP_UPDATE = 9;
+
         private TcpClient client;
 
         public RemoteClient()
@@ -29,21 +35,29 @@ namespace Network
             this.client = new TcpClient();
         }
 
-        public delegate void RoboStatusUpdated(RoboStatus newStatus);
-
         public delegate void RobotConnected();
 
         public delegate void RobotDisconnected();
 
         public delegate void ConnectionFailed();
 
-        public event RoboStatusUpdated OnRoboStatusUpdated;
+        public delegate void RoboStatusUpdated(RoboStatus newStatus);
+
+        public delegate void TravelResponseReceived(TravelResponse response);
+
+        public delegate void MapUpdated(Map map);
 
         public event RobotConnected OnRobotConnected;
 
         public event RobotDisconnected OnRobotDisconnected;
 
         public event ConnectionFailed OnConnectionFailed;
+
+        public event RoboStatusUpdated OnRoboStatusUpdated;
+
+        public event TravelResponseReceived OnTravelResponseReceived;
+
+        public event MapUpdated OnMapUpdated;
 
         public bool IsRunning
         {
@@ -121,6 +135,11 @@ namespace Network
         public void SendCalibratingRequest()
         {
             this.SendMessage(MSGCODE_ROBOT_CALIBRATE_REQUEST, MSGCODE_ROBOT_CALIBRATE_REQUEST);
+        }
+
+        public void SendTravelRequest(int id, Map map, Route route)
+        {
+            this.SendMessage(MSGCODE_ROBOT_TRAVEL_ROUTE_REQUEST, new TravelRequest(id, map, route));
         }
 
         public void SendMessage(byte code, object msg)
@@ -240,6 +259,24 @@ namespace Network
                 }
 
                 //this.SendData(4, Helper.GetBytesFromMessage(rs));
+            }
+            else if (code == MSGCODE_ROBOT_TRAVEL_ROUTE_RESPONSE)
+            {
+                TravelResponse response = Helper.GetMessageFromBytes<TravelResponse>(data);
+
+                if (this.OnTravelResponseReceived != null)
+                {
+                    this.OnTravelResponseReceived(response);
+                }
+            }
+            else if (code == MSGCODE_ROBOT_SCAN_MAP_UPDATE)
+            {
+                Map m = Helper.GetMessageFromBytes<Map>(data);
+
+                if (this.OnMapUpdated != null)
+                {
+                    this.OnMapUpdated(m);
+                }
             }
             else
             {
