@@ -18,6 +18,12 @@ namespace GeneralLibrary
             set;
         }
 
+        public bool Accepted
+        {
+            get;
+            set;
+        }
+
         public Route CreatedRoute
         {
             get;

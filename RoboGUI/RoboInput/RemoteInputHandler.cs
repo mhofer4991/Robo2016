@@ -19,6 +19,8 @@ namespace RoboInput
 
         public const int CODE_STOP = 5;
 
+        public const int CODE_SCAN = 6;
+
         private IManualRobotInput robotInput;
 
         private IRemoteInputSender inputSender;
@@ -36,6 +38,7 @@ namespace RoboInput
             this.robotInput.OnTurnRight += RobotInput_OnTurnRight;
             this.robotInput.OnTurnLeft += RobotInput_OnTurnLeft;
             this.robotInput.OnStopMovement += RobotInput_OnStopMovement;
+            this.robotInput.OnScanArea += RobotInput_OnScanArea;
 
             this.inputSender = inputSender;
 
@@ -178,6 +181,13 @@ namespace RoboInput
         private void RobotInput_OnStopMovement()
         {
             ControlInput input = new ControlInput(CODE_STOP, true);
+
+            this.inputSender.SendInput(input);
+        }
+
+        private void RobotInput_OnScanArea()
+        {
+            ControlInput input = new ControlInput(CODE_SCAN, true, true, 0);
 
             this.inputSender.SendInput(input);
         }

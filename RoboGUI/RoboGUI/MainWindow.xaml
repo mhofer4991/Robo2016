@@ -17,8 +17,12 @@
                 <Button Name="connectButton" Click="connectButton_Click" Content="Connect"></Button>
                 <Button IsEnabled="False" Name="disconnectButton" Click="disconnectButton_Click" Content="Disconnect"></Button>
                 <Button Name="calibrateButton" Click="calibrateButton_Click" Content="Calibrate"></Button>
+                <Button Name="startmanualButton" Click="startmanualButton_Click" Content="Start manual scan mode"></Button>
+                <Button IsEnabled="False" Name="exitmanualButton" Click="exitmanualButton_Click" Content="Exit manual scan mode"></Button>
+                <Button Name="startautoButton" Click="startautoButton_Click" Content="Start auto scan mode"></Button>
+                <Button IsEnabled="False" Click="exitautoButton_Click" Name="exitautoButton" Content="Exit auto scan mode"></Button>
             </StackPanel>
         </Grid>
-        <views:RoboMap OnRouteRun="map1_OnRouteRun" Grid.Column="1" Margin="20" x:Name="map1"></views:RoboMap>
+        <views:RoboMap OnRouteCancel="map1_OnRouteCancel" OnRouteRun="map1_OnRouteRun" Grid.Column="1" Margin="20" x:Name="map1"></views:RoboMap>
     </Grid>
 </Window>

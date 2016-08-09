@@ -81,7 +81,11 @@ namespace RoboGUI.Views
 
         public delegate void RouteRun(Map map, Route route);
 
+        public delegate void RouteCancel();
+
         public event RouteRun OnRouteRun;
+
+        public event RouteCancel OnRouteCancel;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -150,6 +154,7 @@ namespace RoboGUI.Views
         public void UpdateMap(Map map)
         {
             ResetMap();
+            ResetRoute();
             this.currentMap = map;
 
             for (int i = 0; i < map.Fields.GetUpperBound(0) + 1; i++)
@@ -692,6 +697,14 @@ namespace RoboGUI.Views
             else
             {
                 MessageBox.Show("You have to create a route first!");
+            }
+        }
+
+        private void cancelrouteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.OnRouteCancel != null)
+            {
+                this.OnRouteCancel();
             }
         }
     }

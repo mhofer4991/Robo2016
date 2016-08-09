@@ -14,11 +14,12 @@
         
         <Grid Grid.Row="0" Name="mapControl" Background="White">
             <StackPanel Orientation="Horizontal">
-                <Button Padding="10 0 10 0" Name="runrouteButton" Click="runrouteButton_Click">Run route</Button>
-                <Button Padding="10 0 10 0" Name="loadmapButton" Click="loadmapButton_Click">Load map</Button>
-                <Button Padding="10 0 10 0" Name="savemapButton" Click="savemapButton_Click">Save map</Button>
-                <Button Padding="10 0 10 0" Name="editmapButton" Click="editmapButton_Click">Edit map</Button>
-                <Button Padding="10 0 10 0" Name="exitEditButton" Click="exitEditButton_Click" Visibility="Collapsed">Exit edit</Button>
+                <Button Padding="10 0 10 0" Background="LightGreen" Name="runrouteButton" Click="runrouteButton_Click">Run route</Button>
+                <Button Padding="10 0 10 0" Name="cancelrouteButton" Click="cancelrouteButton_Click" Background="#FFFDB4B4">Cancel route</Button>
+                <Button Padding="10 0 10 0" Background="White" Name="loadmapButton" Click="loadmapButton_Click">Load map</Button>
+                <Button Padding="10 0 10 0" Background="White" Name="savemapButton" Click="savemapButton_Click">Save map</Button>
+                <Button Padding="10 0 10 0" Background="LightYellow" Name="editmapButton" Click="editmapButton_Click">Edit map</Button>
+                <Button Padding="10 0 10 0" Background="LightYellow" Name="exitEditButton" Click="exitEditButton_Click" Visibility="Collapsed">Exit edit</Button>
                 <Button Padding="10 0 10 0" Name="jumpcenter" Click="jumpcenter_Click">Go to center</Button>
                 <Button Padding="10 0 10 0" Name="createmapButton" Click="createmapButton_Click">Create new map</Button>
                 <Button Padding="10 0 10 0" Name="clearroute" Click="clearroute_Click">Clear route</Button>

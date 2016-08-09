@@ -28,6 +28,16 @@ namespace Network
 
         public const byte MSGCODE_ROBOT_SCAN_MAP_UPDATE = 9;
 
+        public const byte MSGCODE_ROBOT_CANCEL_ROUTE_REQUESET = 10;
+
+        public const byte MSGCODE_ROBOT_START_MANUAL_SCAN_MODE = 11;
+
+        public const byte MSGCODE_ROBOT_EXIT_MANUAL_SCAN_MODE = 12;
+
+        public const byte MSGCODE_ROBOT_START_AUTO_SCAN_MODE = 13;
+
+        public const byte MSGCODE_ROBOT_EXIT_AUTO_SCAN_MODE = 14;
+
         private TcpClient client;
 
         public RemoteClient()
@@ -127,6 +137,10 @@ namespace Network
             }
         }
 
+        //
+        // Send methods
+        //
+
         public void SendInput(ControlInput controlInput)
         {
             this.SendMessage(MSGCODE_REMOTE_CONTROL_INPUT, controlInput);
@@ -140,6 +154,31 @@ namespace Network
         public void SendTravelRequest(int id, Map map, Route route)
         {
             this.SendMessage(MSGCODE_ROBOT_TRAVEL_ROUTE_REQUEST, new TravelRequest(id, map, route));
+        }
+
+        public void SendCancelRouteRequest()
+        {
+            this.SendMessage(MSGCODE_ROBOT_CANCEL_ROUTE_REQUESET, MSGCODE_ROBOT_CANCEL_ROUTE_REQUESET);
+        }
+
+        public void StartManualScanMode()
+        {
+            this.SendMessage(MSGCODE_ROBOT_START_MANUAL_SCAN_MODE, MSGCODE_ROBOT_START_MANUAL_SCAN_MODE);
+        }
+
+        public void ExitManualScanMode()
+        {
+            this.SendMessage(MSGCODE_ROBOT_EXIT_MANUAL_SCAN_MODE, MSGCODE_ROBOT_EXIT_MANUAL_SCAN_MODE);
+        }
+
+        public void StartAutoScanMode()
+        {
+            this.SendMessage(MSGCODE_ROBOT_START_AUTO_SCAN_MODE, MSGCODE_ROBOT_START_AUTO_SCAN_MODE);
+        }
+
+        public void ExitAutoScanMode()
+        {
+            this.SendMessage(MSGCODE_ROBOT_EXIT_AUTO_SCAN_MODE, MSGCODE_ROBOT_EXIT_AUTO_SCAN_MODE);
         }
 
         public void SendMessage(byte code, object msg)
@@ -172,6 +211,10 @@ namespace Network
                 }
             });
         }
+
+        //
+        // Handle methods
+        //
 
         private void HandleClient(object client)
         {
