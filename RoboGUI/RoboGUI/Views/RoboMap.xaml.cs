@@ -546,7 +546,11 @@ namespace RoboGUI.Views
             robotDown = false;
             moveRobot = false;
 
-            this.UpdateRobotPosition(new Point(0, 0));
+            if (this.currentMode == MapMode.Edit)
+            {
+                this.UpdateRobotPosition(new Point(0, 0));
+            }
+
             this.robotPositionPolygon.IsHitTestVisible = true;
         }
 

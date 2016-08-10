@@ -38,6 +38,8 @@ namespace Network
 
         public const byte MSGCODE_ROBOT_EXIT_AUTO_SCAN_MODE = 14;
 
+        public const byte MSGCODE_ROBOT_LOG = 15;
+
         private TcpClient client;
 
         public RemoteClient()
@@ -57,6 +59,8 @@ namespace Network
 
         public delegate void MapUpdated(Map map);
 
+        public delegate void LogReceived(string text);
+
         public event RobotConnected OnRobotConnected;
 
         public event RobotDisconnected OnRobotDisconnected;
@@ -68,6 +72,8 @@ namespace Network
         public event TravelResponseReceived OnTravelResponseReceived;
 
         public event MapUpdated OnMapUpdated;
+
+        public event LogReceived OnLogReceived;
 
         public bool IsRunning
         {
@@ -240,25 +246,32 @@ namespace Network
                             {
                                 int size = BitConverter.ToInt32(length, 0);
 
-                                // Get data
-                                byte[] data = new byte[size];
-                                int bytesRead = 0;
-
-                                while (bytesRead < data.Length)
+                                try
                                 {
-                                    int read = stream.Read(data, bytesRead, data.Length - bytesRead);
-                                    bytesRead += read;
+                                    // Get data
+                                    byte[] data = new byte[size];
+                                    int bytesRead = 0;
 
-                                    if (read == 0)
+                                    while (bytesRead < data.Length)
                                     {
-                                        break;
+                                        int read = stream.Read(data, bytesRead, data.Length - bytesRead);
+                                        bytesRead += read;
+
+                                        if (read == 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+
+                                    if (!HandleData(code[0], data))
+                                    {
+                                        // Handling data was not successful.
+                                        okay = false;
                                     }
                                 }
-
-                                if (!HandleData(code[0], data))
+                                catch (OutOfMemoryException)
                                 {
-                                    // Handling data was not successful.
-                                    okay = false;
+                                    // okay = false?????
                                 }
                             }
                         }
@@ -296,9 +309,12 @@ namespace Network
             {
                 RoboStatus rs = Helper.GetMessageFromBytes<RoboStatus>(data);
 
-                if (this.OnRoboStatusUpdated != null)
+                if (rs != null)
                 {
-                    this.OnRoboStatusUpdated(rs);
+                    if (this.OnRoboStatusUpdated != null)
+                    {
+                        this.OnRoboStatusUpdated(rs);
+                    }
                 }
 
                 //this.SendData(4, Helper.GetBytesFromMessage(rs));
@@ -319,6 +335,15 @@ namespace Network
                 if (this.OnMapUpdated != null)
                 {
                     this.OnMapUpdated(m);
+                }
+            }
+            else if (code == MSGCODE_ROBOT_LOG)
+            {
+                string text = Helper.GetMessageFromBytes<string>(data);
+
+                if (this.OnLogReceived != null)
+                {
+                    this.OnLogReceived(text);
                 }
             }
             else

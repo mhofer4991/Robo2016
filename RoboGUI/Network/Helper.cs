@@ -12,7 +12,14 @@ namespace Network
     {
         public static T GetMessageFromBytes<T>(byte[] data)
         {
-            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
+            }
+            catch (Exception e)
+            {
+                return default(T);
+            }
         }
 
         public static byte[] GetBytesFromMessage(object message)

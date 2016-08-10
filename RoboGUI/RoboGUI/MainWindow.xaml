@@ -13,15 +13,29 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
             <StackPanel>
                 <Button Name="connectButton" Click="connectButton_Click" Content="Connect"></Button>
                 <Button IsEnabled="False" Name="disconnectButton" Click="disconnectButton_Click" Content="Disconnect"></Button>
-                <Button Name="calibrateButton" Click="calibrateButton_Click" Content="Calibrate"></Button>
-                <Button Name="startmanualButton" Click="startmanualButton_Click" Content="Start manual scan mode"></Button>
-                <Button Name="exitmanualButton" Click="exitmanualButton_Click" Content="Exit manual scan mode"></Button>
-                <Button Name="startautoButton" Click="startautoButton_Click" Content="Start auto scan mode"></Button>
-                <Button Click="exitautoButton_Click" Name="exitautoButton" Content="Exit auto scan mode"></Button>
+                <Button IsEnabled="False" Name="calibrateButton" Click="calibrateButton_Click" Content="Calibrate"></Button>
+                <Button IsEnabled="False" Name="startmanualButton" Click="startmanualButton_Click" Content="Start manual scan mode"></Button>
+                <Button IsEnabled="False" Name="exitmanualButton" Click="exitmanualButton_Click" Content="Exit manual scan mode"></Button>
+                <Button IsEnabled="False" Name="startautoButton" Click="startautoButton_Click" Content="Start auto scan mode"></Button>
+                <Button IsEnabled="False" Click="exitautoButton_Click" Name="exitautoButton" Content="Exit auto scan mode"></Button>
+                <Button Name="clearlogButton" Click="clearlogButton_Click" Content="Clear log"></Button>
             </StackPanel>
+            <ListBox Grid.Row="1" Name="robotLog" ItemsSource="{Binding}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding}"></TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
         <views:RoboMap OnRouteCancel="map1_OnRouteCancel" OnRouteRun="map1_OnRouteRun" Grid.Column="1" Margin="20" x:Name="map1"></views:RoboMap>
     </Grid>
