@@ -18,6 +18,10 @@ namespace Network
 
         public const byte MSGCODE_REMOTE_CONTROL_INPUT = 1;
 
+        public const byte MSGCODE_ROBOT_MAP_REQUEST = 2;
+
+        public const byte MSGCODE_ROBOT_MAP_RESPONSE = 3;
+
         public const byte MSGCODE_ROBOT_STATUS_UPDATE = 5;
 
         public const byte MSGCODE_ROBOT_CALIBRATE_REQUEST = 6;
@@ -40,6 +44,8 @@ namespace Network
 
         public const byte MSGCODE_ROBOT_LOG = 15;
 
+        public const byte MSGCODE_AUTO_SCAN_FINISHED = 16;
+
         private TcpClient client;
 
         public RemoteClient()
@@ -61,6 +67,10 @@ namespace Network
 
         public delegate void LogReceived(string text);
 
+        public delegate void MapResponse(Map map);
+
+        public delegate void AutoScanFinished();
+
         public event RobotConnected OnRobotConnected;
 
         public event RobotDisconnected OnRobotDisconnected;
@@ -74,6 +84,10 @@ namespace Network
         public event MapUpdated OnMapUpdated;
 
         public event LogReceived OnLogReceived;
+
+        public event MapResponse OnMapResponse;
+
+        public event AutoScanFinished OnAutoScanFinished;
 
         public bool IsRunning
         {
@@ -150,6 +164,11 @@ namespace Network
         public void SendInput(ControlInput controlInput)
         {
             this.SendMessage(MSGCODE_REMOTE_CONTROL_INPUT, controlInput);
+        }
+
+        public void SendMapRequest()
+        {
+            this.SendMessage(MSGCODE_ROBOT_MAP_REQUEST, MSGCODE_ROBOT_MAP_REQUEST);
         }
 
         public void SendCalibratingRequest()
@@ -305,7 +324,16 @@ namespace Network
         {
             // Handle data
 
-            if (code == MSGCODE_ROBOT_STATUS_UPDATE)
+            if (code == MSGCODE_ROBOT_MAP_RESPONSE)
+            {
+                Map m = Helper.GetMessageFromBytes<Map>(data);
+
+                if (this.OnMapResponse != null)
+                {
+                    this.OnMapResponse(m);
+                }
+            }
+            else if (code == MSGCODE_ROBOT_STATUS_UPDATE)
             {
                 RoboStatus rs = Helper.GetMessageFromBytes<RoboStatus>(data);
 
@@ -344,6 +372,13 @@ namespace Network
                 if (this.OnLogReceived != null)
                 {
                     this.OnLogReceived(text);
+                }
+            }
+            else if (code == MSGCODE_AUTO_SCAN_FINISHED)
+            {
+                if (this.OnAutoScanFinished != null)
+                {
+                    this.OnAutoScanFinished();
                 }
             }
             else

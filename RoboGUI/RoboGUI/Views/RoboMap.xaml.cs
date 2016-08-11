@@ -691,7 +691,12 @@ namespace RoboGUI.Views
             if (this.createdRoute.Count > 1)
             {
                 // Return back
-                this.AddTravelPoint(new Position(0, 0));
+                Position lastPos = this.createdRoute[this.createdRoute.Count - 1];
+
+                if (lastPos.X != 0 || lastPos.Y != 0)
+                {
+                    this.AddTravelPoint(new Position(0, 0));
+                }
 
                 if (this.OnRouteRun != null)
                 {

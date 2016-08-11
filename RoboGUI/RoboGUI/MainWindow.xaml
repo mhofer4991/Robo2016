@@ -25,6 +25,8 @@
                 <Button IsEnabled="False" Name="exitmanualButton" Click="exitmanualButton_Click" Content="Exit manual scan mode"></Button>
                 <Button IsEnabled="False" Name="startautoButton" Click="startautoButton_Click" Content="Start auto scan mode"></Button>
                 <Button IsEnabled="False" Click="exitautoButton_Click" Name="exitautoButton" Content="Exit auto scan mode"></Button>
+                <Button IsEnabled="False" Name="requestmapButton" Click="requestmapButton_Click" Content="Request map"></Button>
+                <Button Name="savelogButton" Click="savelogButton_Click" Content="Save log"></Button>
                 <Button Name="clearlogButton" Click="clearlogButton_Click" Content="Clear log"></Button>
             </StackPanel>
             <ListBox Grid.Row="1" Name="robotLog" ItemsSource="{Binding}">
