@@ -232,7 +232,7 @@ namespace RoboGUI.Views
             this.createdRoute.Clear();
             this.routeMap.Children.Clear();
 
-            this.createdRoute.Add(new Position(0, 0));
+            //this.createdRoute.Add(new Position(0, 0));
         }
 
         private void ResetMap()
@@ -692,11 +692,20 @@ namespace RoboGUI.Views
             {
                 // Return back
                 Position lastPos = this.createdRoute[this.createdRoute.Count - 1];
+                Position firstPos = this.createdRoute[0];
+
+                if (firstPos.X != 0 || firstPos.Y != 0)
+                {
+                    this.createdRoute.Insert(0, new Position(0, 0));
+                }
 
                 if (lastPos.X != 0 || lastPos.Y != 0)
                 {
-                    this.AddTravelPoint(new Position(0, 0));
+                    this.createdRoute.Add(new Position(0, 0));
+                    //this.AddTravelPoint(new Position(0, 0));
                 }
+                
+                this.UpdateRoute(new Route(new List<Position>(this.createdRoute)));
 
                 if (this.OnRouteRun != null)
                 {
