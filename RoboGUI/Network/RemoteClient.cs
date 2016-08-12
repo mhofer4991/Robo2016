@@ -22,6 +22,8 @@ namespace Network
 
         public const byte MSGCODE_ROBOT_MAP_RESPONSE = 3;
 
+        public const byte MSGCODE_ROBOT_CALIBRATE_FINISHED = 4;
+
         public const byte MSGCODE_ROBOT_STATUS_UPDATE = 5;
 
         public const byte MSGCODE_ROBOT_CALIBRATE_REQUEST = 6;
@@ -71,6 +73,8 @@ namespace Network
 
         public delegate void AutoScanFinished();
 
+        public delegate void CalibrationFinished();
+
         public event RobotConnected OnRobotConnected;
 
         public event RobotDisconnected OnRobotDisconnected;
@@ -88,6 +92,8 @@ namespace Network
         public event MapResponse OnMapResponse;
 
         public event AutoScanFinished OnAutoScanFinished;
+
+        public event CalibrationFinished OnCalibrationFinished;
 
         public bool IsRunning
         {
@@ -324,7 +330,14 @@ namespace Network
         {
             // Handle data
 
-            if (code == MSGCODE_ROBOT_MAP_RESPONSE)
+            if (code == MSGCODE_ROBOT_CALIBRATE_FINISHED)
+            {
+                if (this.OnCalibrationFinished != null)
+                {
+                    this.OnCalibrationFinished();
+                }
+            }
+            else if (code == MSGCODE_ROBOT_MAP_RESPONSE)
             {
                 Map m = Helper.GetMessageFromBytes<Map>(data);
 

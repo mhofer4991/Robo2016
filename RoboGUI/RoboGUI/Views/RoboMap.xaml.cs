@@ -240,7 +240,7 @@ namespace RoboGUI.Views
             this.currentMap = new Map();
             this.currentMap.Fields = new Field[1, 1];
             this.currentMap.Fields[0, 0] = new Field(0, 0);
-            this.currentMap.Fields[0, 0].State = Fieldstate.free;
+            this.currentMap.Fields[0, 0].State = Fieldstate.freeScanned;
 
             this.scanMap.Children.Clear();
             this.fields.Clear();
@@ -502,21 +502,17 @@ namespace RoboGUI.Views
         private void El_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             Position tp = (Position)((Ellipse)sender).DataContext;
+            
+            this.createdRoute.Remove(tp);
+            List<Position> copied = new List<Position>(this.createdRoute);
 
-            // The first travel point cannot be deleted because the start is always the first travel point.
-            if (this.createdRoute.IndexOf(tp) != 0)
+            this.createdRoute.Clear();
+
+            this.routeMap.Children.Clear();
+
+            foreach (Position p in copied)
             {
-                this.createdRoute.Remove(tp);
-                List<Position> copied = new List<Position>(this.createdRoute);
-
-                this.createdRoute.Clear();
-
-                this.routeMap.Children.Clear();
-
-                foreach (Position p in copied)
-                {
-                    this.AddTravelPoint(p);
-                }
+                this.AddTravelPoint(p);
             }
         }
 
@@ -688,20 +684,23 @@ namespace RoboGUI.Views
 
         private void runrouteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.createdRoute.Count > 1)
+            if (this.createdRoute.Count > 0)
             {
                 // Return back
                 Position lastPos = this.createdRoute[this.createdRoute.Count - 1];
                 Position firstPos = this.createdRoute[0];
+                Position relativeRobotPosition = new Position(
+                    (int)(Math.Round(currentRobotPosition.X / (float)CellSize)),
+                    (int)(Math.Round(currentRobotPosition.Y / (float)CellSize)));
 
-                if (firstPos.X != 0 || firstPos.Y != 0)
+                if (firstPos.X != relativeRobotPosition.X || firstPos.Y != relativeRobotPosition.Y)
                 {
-                    this.createdRoute.Insert(0, new Position(0, 0));
+                    this.createdRoute.Insert(0, relativeRobotPosition);
                 }
 
-                if (lastPos.X != 0 || lastPos.Y != 0)
+                if (lastPos.X != relativeRobotPosition.X || lastPos.Y != relativeRobotPosition.Y)
                 {
-                    this.createdRoute.Add(new Position(0, 0));
+                    this.createdRoute.Add(relativeRobotPosition);
                     //this.AddTravelPoint(new Position(0, 0));
                 }
                 
